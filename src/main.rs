@@ -40,7 +40,7 @@ fn pixel_vector_to_matrix(
 fn main() {
     // let img = image::open("./img/ascii-pineapple.jpg").unwrap();
     // let img = image::imageops::resize(&img, 72, 47, FilterType::CatmullRom);
-    let img = image::open("./img/yin-yang-symbol.jpg").unwrap();
+    let img = image::open("./img/yin-yang-symbol.jpg").unwrap().into_rgb();
     let img = image::imageops::resize(&img, 80, 80, FilterType::CatmullRom);
     let (width, height) = img.dimensions();
 
