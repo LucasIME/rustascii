@@ -3,40 +3,14 @@ use image::imageops::FilterType;
 use image::GenericImage;
 use image::GenericImageView;
 
+mod asciiconverter;
+use asciiconverter::brightness_matrix_to_multiline_ascii_string;
+
 #[derive(Debug, Clone, Copy)]
-struct BrightnessPixel {
+pub struct BrightnessPixel {
     x: u32,
     y: u32,
     brightness: u8,
-}
-
-const dark_to_lightest_chars: &'static str =
-    "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
-
-fn brightness_to_ascii_pixel(pixel: &BrightnessPixel) -> char {
-    let target_char_index = (pixel.brightness as usize * dark_to_lightest_chars.len()) / 255;
-    let target_char = dark_to_lightest_chars
-        .chars()
-        .nth(target_char_index)
-        .unwrap();
-    return target_char;
-}
-
-fn brightness_matrix_to_multiline_ascii_string(img: Vec<Vec<BrightnessPixel>>) -> String {
-    let mut out: String = "".to_string();
-
-    for line in img {
-        let linestr: String = line.iter().map(|p| {
-            let c = brightness_to_ascii_pixel(p);
-            let tripple_c: String = vec!(c, c, c).iter().collect();
-
-            return tripple_c;
-
-        }).collect();
-        out = out + "\n" + &linestr;
-    }
-
-    return out;
 }
 
 fn pixel_vector_to_matrix(
@@ -85,6 +59,4 @@ fn main() {
         "{}",
         brightness_matrix_to_multiline_ascii_string(bright_matrix)
     );
-
-    println!("{:?}", img.dimensions());
 }
