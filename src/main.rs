@@ -1,10 +1,11 @@
 use image;
 use image::imageops::FilterType;
-use image::GenericImage;
-use image::GenericImageView;
 
 mod asciiconverter;
 use asciiconverter::brightness_matrix_to_multiline_ascii_string;
+
+mod brightnessconverter;
+use brightnessconverter::rgb_pixel_to_brightness;
 
 #[derive(Debug, Clone, Copy)]
 pub struct BrightnessPixel {
@@ -46,10 +47,13 @@ fn main() {
     let brightness_pixel_map: Vec<BrightnessPixel> = img
         .enumerate_pixels()
         // .pixels()
-        .map(|p| BrightnessPixel {
+        .map(|p|  {
+            // TODO: find a way to fix this and pass things in a first class way
+            let rgb = (((p.2).0)[0], ((p.2).0)[1], ((p.2).0)[2]);
+            BrightnessPixel {
             x: p.0,
             y: p.1,
-            brightness: ((p.2)[0] as u16 + (p.2)[1] as u16 + (p.2)[2] as u16) as u8 / 3,
+            brightness: rgb_pixel_to_brightness(rgb, brightnessconverter::BrightnessConversionType::Luminosity)        } 
         })
         .collect();
 
