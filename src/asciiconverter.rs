@@ -1,3 +1,4 @@
+use crate::scaling::CHAR_SCALING_FACTOR;
 use crate::BrightnessPixel;
 
 const DARK_TO_LIGHTEST_CHARS: &'static str =
@@ -16,13 +17,15 @@ pub fn brightness_matrix_to_multiline_ascii_string(img: Vec<Vec<BrightnessPixel>
     let mut out: String = "".to_string();
 
     for line in img {
-        let linestr: String = line.iter().map(|p| {
-            let c = brightness_to_ascii_pixel(p.brightness);
-            let tripple_c: String = vec!(c, c, c).iter().collect();
+        let linestr: String = line
+            .iter()
+            .map(|p| {
+                let c = brightness_to_ascii_pixel(p.brightness);
+                let tripple_c: String = [c; CHAR_SCALING_FACTOR].iter().collect();
 
-            return tripple_c;
-
-        }).collect();
+                return tripple_c;
+            })
+            .collect();
         out = out + "\n" + &linestr;
     }
 
@@ -43,5 +46,4 @@ mod tests {
     fn test_low_brightness_is_correct() {
         assert_eq!(brightness_to_ascii_pixel(0), '`');
     }
-
 }
