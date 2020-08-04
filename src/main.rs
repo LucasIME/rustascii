@@ -49,14 +49,13 @@ fn main() {
 
     let brightness_pixel_map: Vec<BrightnessPixel> = img
         .enumerate_pixels()
-        .map(|p| {
-            // TODO: find a way to fix this and pass things in a first class way
-            let rgb = (((p.2).0)[0], ((p.2).0)[1], ((p.2).0)[2]);
+        .map(|(x, y, rgb)| {
+            let rgb_tuple = (rgb[0], rgb[1], rgb[2]);
             BrightnessPixel {
-                x: p.0,
-                y: p.1,
+                x,
+                y,
                 brightness: rgb_pixel_to_brightness(
-                    rgb,
+                    rgb_tuple,
                     brightnessconverter::BrightnessConversionType::Luminosity,
                 ),
             }
