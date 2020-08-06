@@ -1,6 +1,8 @@
 use terminal_size::terminal_size;
 use terminal_size::Width;
 
+use crate::options::ScaleConfig;
+
 pub const CHAR_SCALING_FACTOR: usize = 3;
 
 pub fn scale_to_fit_terminal_horizontally(src_width: u32, src_height: u32) -> (u32, u32) {
@@ -16,4 +18,17 @@ pub fn scale_to_fit_terminal_horizontally(src_width: u32, src_height: u32) -> (u
     let new_height = (src_height as f32 * scaling_factor) as u32;
 
     return (new_width, new_height);
+}
+
+pub fn get_new_size_according_to_config(
+    dimensions: (u32, u32),
+    scale_config: ScaleConfig,
+) -> (u32, u32) {
+    return match scale_config {
+        ScaleConfig::OriginalSize => dimensions,
+        ScaleConfig::FitToTerminal => {
+            scale_to_fit_terminal_horizontally(dimensions.0, dimensions.1)
+        }
+        ScaleConfig::FixedSize(new_w, new_h) => (new_w, new_h),
+    };
 }

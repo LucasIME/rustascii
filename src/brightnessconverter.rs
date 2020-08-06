@@ -1,10 +1,11 @@
+#[derive(Copy, Clone)]
 pub enum BrightnessConversionType {
     Average,
     Lightness,
     Luminosity,
 }
 
-pub fn rgb_pixel_to_brightness(p: (u8, u8, u8), algo: BrightnessConversionType) -> u8 {
+pub fn rgb_pixel_to_brightness(p: (u8, u8, u8), algo: &BrightnessConversionType) -> u8 {
     let red = p.0 as usize;
     let green = p.1 as usize;
     let blue = p.2 as usize;

@@ -2,13 +2,13 @@ use image;
 use image::imageops::FilterType;
 
 mod asciiconverter;
-use asciiconverter::brightness_matrix_to_multiline_ascii_string;
+use asciiconverter::AsciiConverter;
 
 mod brightnessconverter;
 use brightnessconverter::rgb_pixel_to_brightness;
 
+mod options;
 mod scaling;
-use scaling::scale_to_fit_terminal_horizontally;
 
 #[derive(Debug, Clone, Copy)]
 pub struct BrightnessPixel {
@@ -41,9 +41,11 @@ fn pixel_vector_to_matrix(
 }
 
 fn main() {
+    let opts = options::get_default_options();
     let img = image::open("./img/octocat.png").unwrap().into_rgb();
+
     let (scaled_width, scaled_height) =
-        scale_to_fit_terminal_horizontally(img.width(), img.height());
+        scaling::get_new_size_according_to_config((img.width(), img.height()), opts.scale_config);
     let img = image::imageops::resize(&img, scaled_width, scaled_height, FilterType::CatmullRom);
     let (width, height) = img.dimensions();
 
@@ -56,7 +58,7 @@ fn main() {
                 y,
                 brightness: rgb_pixel_to_brightness(
                     rgb_tuple,
-                    brightnessconverter::BrightnessConversionType::Luminosity,
+                    &opts.brightness_convertion_algorithm,
                 ),
             }
         })
@@ -66,6 +68,9 @@ fn main() {
 
     println!(
         "{}",
-        brightness_matrix_to_multiline_ascii_string(bright_matrix)
+        AsciiConverter {
+            should_invert_colors: opts.should_invert_colors
+        }
+        .brightness_matrix_to_multiline_ascii_string(bright_matrix)
     );
 }
