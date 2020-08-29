@@ -2,7 +2,7 @@ use crate::scaling::CHAR_SCALING_FACTOR;
 use crate::BrightnessPixel;
 
 const DARK_TO_LIGHTEST_CHARS: &'static str =
-    "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+    " .\'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
 
 pub struct AsciiConverter {
     pub should_invert_colors: bool,
